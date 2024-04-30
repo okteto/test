@@ -1,0 +1,43 @@
+name: 'Okteto Test'
+description: 'Run tests in okteto'
+inputs:
+  name:
+    description: "The name of the dev environment"
+    required: false
+  namespace:
+    description: "If present, the namespace scope for this action. If not specified, it will use the current context"
+    required: false
+  timeout:
+    description: "The length of time to wait for completion, zero means never. Any other values should contain a corresponding time unit e.g. 1s, 2m, 3h  (default 5m0s)"
+    required: false
+  variables:
+    description: "Variables to be used by the dev environment. If several variables are present, they should be separated by commas e.g. VAR1=VAL1,VAR2=VAL2,VAR3=VAL3"
+    required: false
+  filename:
+    description: "path to the okteto manifest file, if not specified the default path will be used"
+    required: false
+  nocache:
+    description: 'Do not use cache for runnings the tests'
+    required: false
+  deploy:
+    description: 'Deploy the dev environment always. Even if it has already been deployed'
+    required: false
+  tests:
+    description: "The test sections to run. If not tests are defined, all tests are ran"
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.name }}
+    - ${{ inputs.namespace }}
+    - ${{ inputs.file }}
+    - ${{ inputs.deploy }}
+    - ${{ inputs.nocache }}
+    - ${{ inputs.variables }}
+    - ${{ inputs.timeout }}
+    - ${{ inputs.tests }}
+
+branding:
+  color: 'green'
+  icon: 'layers'
