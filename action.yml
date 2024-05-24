@@ -22,6 +22,9 @@ inputs:
   timeout:
     description: "The length of time to wait for completion, zero means never. Any other values should contain a corresponding time unit e.g. 1s, 2m, 3h  (default 5m0s)"
     required: false
+  log-level:
+    description: "Log level string. Valid options are debug, info, warn, error"
+    required: false
   tests:
     description: "The test sections to run separated by spaces. If not tests are defined, all tests are ran. Eg: 'unit integration' "
     required: false
@@ -36,6 +39,7 @@ runs:
     - ${{ inputs.nocache }}
     - ${{ inputs.variables }}
     - ${{ inputs.timeout }}
+    - ${{ inputs.log-level }}
     - ${{ inputs.tests }}
 
 branding:

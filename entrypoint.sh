@@ -9,7 +9,8 @@ deploy=$4
 nocache=$5
 variables=$6
 timeout=$7
-tests="${@:8}"
+log_level=$8
+tests="${@:9}"
 
 if [ -n "$OKTETO_CA_CERT" ]; then
    echo "Custom certificate is provided"
@@ -19,7 +20,22 @@ fi
 
 command="test"
 
-params="--progress plain"
+if [ ! -z "$log_level" ]; then
+  if [ "$log_level" = "debug" ] || [ "$log_level" = "info" ] || [ "$log_level" = "warn" ] || [ "$log_level" = "error" ] ; then
+    log_level="--log-level ${log_level}"
+  else
+    echo "log-level supported: debug, info, warn, error"
+    exit 1
+  fi
+fi
+
+# https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging
+# https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${RUNNER_DEBUG}" = "1" ]; then
+  log_level="--log-level debug"
+fi
+
+params="--progress plain $log_level"
 
 if [ -n "$name" ]; then
    params="$params --name $name"
