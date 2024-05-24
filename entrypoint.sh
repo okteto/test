@@ -35,7 +35,7 @@ if [ "${RUNNER_DEBUG}" = "1" ]; then
   log_level="--log-level debug"
 fi
 
-params="--progress plain $log_level"
+params="$log_level"
 
 if [ -n "$name" ]; then
    params="$params --name $name"
