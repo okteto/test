@@ -13,7 +13,7 @@ inputs:
   deploy:
     description: 'Deploy the dev environment always even if it has already been deployed'
     required: false
-  nocache:
+  no-cache:
     description: 'Do not use the cache for runnings the tests'
     required: false
   variables:
@@ -36,7 +36,7 @@ runs:
     - ${{ inputs.namespace }}
     - ${{ inputs.file }}
     - ${{ inputs.deploy }}
-    - ${{ inputs.nocache }}
+    - ${{ inputs.no-cache }}
     - ${{ inputs.variables }}
     - ${{ inputs.timeout }}
     - ${{ inputs.tests }}

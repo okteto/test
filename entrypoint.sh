@@ -6,7 +6,7 @@ name=$1
 namespace=$2
 file=$3
 deploy=$4
-nocache=$5
+no_cache=$5
 variables=$6
 timeout=$7
 tests=$8
@@ -36,7 +36,7 @@ if [ "$deploy" = "true" ]; then
       params="$params --deploy"
 fi
 
-if [ "$nocache" = "true" ]; then
+if [ "$no_cache" = "true" ]; then
       params="$params --no-cache"
 fi
 

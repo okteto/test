@@ -29,7 +29,7 @@ Relative path within the repository to the manifest file (default to okteto-pipe
 
 Deploy the dev environment always even if it has already been deployed
 
-### `nocache`
+### `no-cache`
 
 Do not use cache for runnings the tests
 
