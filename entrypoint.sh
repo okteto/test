@@ -20,22 +20,7 @@ fi
 
 command="test"
 
-if [ ! -z "$log_level" ]; then
-  if [ "$log_level" = "debug" ] || [ "$log_level" = "info" ] || [ "$log_level" = "warn" ] || [ "$log_level" = "error" ] ; then
-    log_level="--log-level ${log_level}"
-  else
-    echo "unsupported log-level ${log_level}, supported options are: debug, info, warn, error"
-    exit 1
-  fi
-fi
-
-# https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging
-# https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-if [ "${RUNNER_DEBUG}" = "1" ]; then
-  log_level="--log-level debug"
-fi
-
-params="$log_level"
+params=""
 
 if [ -n "$name" ]; then
    params="$params --name $name"
@@ -73,6 +58,21 @@ fi
 
 params="$params $tests"
 
-echo running: okteto "$command" "$params"
+if [ ! -z "$log_level" ]; then
+  if [ "$log_level" = "debug" ] || [ "$log_level" = "info" ] || [ "$log_level" = "warn" ] || [ "$log_level" = "error" ] ; then
+    log_level="--log-level ${log_level}"
+  else
+    echo "unsupported log-level ${log_level}, supported options are: debug, info, warn, error"
+    exit 1
+  fi
+fi
+
+# https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging
+# https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${RUNNER_DEBUG}" = "1" ]; then
+  log_level="--log-level debug"
+fi
+
+echo running: okteto $log_level "$command" "$params"
 # shellcheck disable=SC2086
-okteto $command $params
+okteto $command $log_level $params
