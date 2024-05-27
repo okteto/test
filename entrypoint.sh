@@ -10,7 +10,7 @@ nocache=$5
 variables=$6
 timeout=$7
 log_level=$8
-tests="${@:9}"
+tests=$9
 
 if [ -n "$OKTETO_CA_CERT" ]; then
    echo "Custom certificate is provided"
