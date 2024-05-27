@@ -41,6 +41,10 @@ A list of variables to be used by the pipeline. If several variables are present
 
 The length of time to wait for completion. Values should contain a corresponding time unit e.g. 1s, 2m, 3h. If not specified it will use `5m`.
 
+### `tests`
+
+The test sections to run, separated by spaces. If no tests are specified all tests are run.
+
 ### `log-level`
 
 Log level used. Supported values are: `debug`, `info`, `warn`, `error`. (defaults to warn)
