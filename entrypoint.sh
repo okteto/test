@@ -18,8 +18,6 @@ if [ -n "$OKTETO_CA_CERT" ]; then
    update-ca-certificates
 fi
 
-command="test"
-
 params=""
 
 if [ -n "$name" ]; then
@@ -73,6 +71,6 @@ if [ "${RUNNER_DEBUG}" = "1" ]; then
   log_level="--log-level debug"
 fi
 
-echo running: okteto $log_level "$command" "$params"
+echo running: okteto test $log_level "$params"
 # shellcheck disable=SC2086
-okteto $command $log_level $params
+okteto test $log_level $params
