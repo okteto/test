@@ -13,7 +13,7 @@ inputs:
   deploy:
     description: 'Deploy the dev environment always even if it has already been deployed'
     required: false
-  nocache:
+  no-cache:
     description: 'Do not use the cache for runnings the tests'
     required: false
   variables:
@@ -25,6 +25,9 @@ inputs:
   tests:
     description: "The test sections to run separated by spaces. If not tests are defined, all tests are ran. Eg: 'unit integration' "
     required: false
+  log-level:
+    description: "Log level string. Valid options are debug, info, warn, error"
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -33,10 +36,11 @@ runs:
     - ${{ inputs.namespace }}
     - ${{ inputs.file }}
     - ${{ inputs.deploy }}
-    - ${{ inputs.nocache }}
+    - ${{ inputs.no-cache }}
     - ${{ inputs.variables }}
     - ${{ inputs.timeout }}
     - ${{ inputs.tests }}
+    - ${{ inputs.log-level }}
 
 branding:
   color: 'green'
