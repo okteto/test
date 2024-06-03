@@ -6,10 +6,11 @@ name=$1
 namespace=$2
 file=$3
 deploy=$4
-nocache=$5
+no_cache=$5
 variables=$6
 timeout=$7
-tests="${@:8}"
+tests=$8
+log_level=$9
 
 if [ -n "$OKTETO_CA_CERT" ]; then
    echo "Custom certificate is provided"
@@ -17,9 +18,7 @@ if [ -n "$OKTETO_CA_CERT" ]; then
    update-ca-certificates
 fi
 
-command="test"
-
-params="--progress plain"
+params=""
 
 if [ -n "$name" ]; then
    params="$params --name $name"
@@ -37,7 +36,7 @@ if [ "$deploy" = "true" ]; then
       params="$params --deploy"
 fi
 
-if [ "$nocache" = "true" ]; then
+if [ "$no_cache" = "true" ]; then
       params="$params --no-cache"
 fi
 
@@ -57,6 +56,16 @@ fi
 
 params="$params $tests"
 
-echo running: okteto "$command" "$params"
+if [ ! -z "$log_level" ]; then
+  log_level="--log-level ${log_level}"
+fi
+
+# https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging
+# https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${RUNNER_DEBUG}" = "1" ]; then
+  log_level="--log-level debug"
+fi
+
+echo running: okteto test $log_level "$params"
 # shellcheck disable=SC2086
-okteto $command $params
+okteto test $log_level $params
