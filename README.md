@@ -99,16 +99,21 @@ jobs:
        OKTETO_CA_CERT: ${{ secrets.OKTETO_CA_CERT }}
 
      steps:
-     - name: Context
-       uses: okteto/context@latest
-       with:
-         url: https://okteto.example.com
-         token: ${{ secrets.OKTETO_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+          with:
+            # ... see https://github.com/actions/checkout?tab=readme-ov-file#usage
 
-    - name: "Run tests"
-      uses: okteto/test@latest
-      with:
-        test: "integration"
-        variables: "USER=admin,PASS=admin"
+      - name: Set Okteto context
+        uses: okteto/context@latest
+        with:
+          url: https://okteto.example.com
+          token: ${{ secrets.OKTETO_TOKEN }}
+
+      - name: Run tests
+        uses: okteto/test@latest
+        with:
+          tests: integration
+          variables: "USER=admin,PASS=admin"
 
  ```
