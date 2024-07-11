@@ -73,7 +73,7 @@ jobs:
     - name: "Run tests"
       uses: okteto/test@latest
       with:
-        test: "integration"
+        tests: "integration"
         variables: "USER=admin,PASS=admin"
 ```
 
