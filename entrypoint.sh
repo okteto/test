@@ -49,6 +49,8 @@ if [ ! -z "${variables}" ]; then
   params="${params} ${variable_params}"
 fi
 
+env
+echo "-----------------------------------"
 github_env_vars=$(env | grep '^GITHUB_')
 github_params=""
 
