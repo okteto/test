@@ -49,13 +49,13 @@ if [ ! -z "${variables}" ]; then
   params="${params} ${variable_params}"
 fi
 
-github_env_vars=$(env | grep '^GITHUB_' | cut -d'=' -f1)
+github_env_vars=$(env | grep '^GITHUB_')
 github_params=""
 
-printenv
-
-for VAR_NAME in $github_env_vars; do
-   github_params="$github_params --var $VAR_NAME=\$$VAR_NAME"
+for VAR in $github_env_vars; do
+   VAR_NAME=$(echo $VAR | cut -d= -f1)
+   VAR_VALUE=$(echo $VAR | cut -d= -f2)
+   github_params="$github_params --var $VAR_NAME=$VAR_VALUE"
 done
 params="$params $github_params"
 
