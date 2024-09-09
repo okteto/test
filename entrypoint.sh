@@ -2,6 +2,9 @@
 
 set -e
 
+
+
+
 name=$1
 namespace=$2
 file=$3
@@ -49,10 +52,11 @@ if [ ! -z "${variables}" ]; then
   params="${params} ${variable_params}"
 fi
 
-github_env_vars=$(env | grep '^GITHUB_')
+github_env_vars=$(env | grep '^GITHUB_' | cut -d'=' -f1)
 github_params=""
-for VAR in $github_env_vars; do
-   github_params="$github_params --var $VAR"
+
+for VAR_NAME in $github_env_vars; do
+   github_params="$github_params --var $VAR_NAME=\$$VAR_NAME"
 done
 params="$params $github_params"
 
