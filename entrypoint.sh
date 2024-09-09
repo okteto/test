@@ -49,6 +49,7 @@ if [ ! -z "${variables}" ]; then
   params="${params} ${variable_params}"
 fi
 
+IFS=$'\n'
 github_env_vars=$(env | grep '^GITHUB_')
 github_params=""
 
@@ -59,7 +60,7 @@ for VAR in $github_env_vars; do
    github_params="$github_params --var $VAR_NAME=\"$VAR_VALUE\""
 done
 params="$params $github_params"
-
+unset IFS
 
 if [ -n "$timeout" ]; then
    params="$params --timeout $timeout"
