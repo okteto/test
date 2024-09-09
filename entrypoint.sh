@@ -2,9 +2,6 @@
 
 set -e
 
-
-
-
 name=$1
 namespace=$2
 file=$3
