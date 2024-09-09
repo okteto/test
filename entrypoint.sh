@@ -52,6 +52,8 @@ fi
 github_env_vars=$(env | grep '^GITHUB_' | cut -d'=' -f1)
 github_params=""
 
+printenv
+
 for VAR_NAME in $github_env_vars; do
    github_params="$github_params --var $VAR_NAME=\$$VAR_NAME"
 done
