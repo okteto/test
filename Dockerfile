@@ -13,6 +13,6 @@ RUN chmod +x okteto-action
 
 FROM okteto/okteto:2.31.0
 
-COPY --from=builder /app/okteto-action .
+COPY --from=builder /app/okteto-action /app/okteto-action
 
-ENTRYPOINT ["./okteto-action"] 
+ENTRYPOINT ["/app/okteto-action"] 
