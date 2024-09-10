@@ -12,6 +12,8 @@ timeout=$7
 tests=$8
 log_level=$9
 
+IFS=$'\n'
+
 if [ -n "$OKTETO_CA_CERT" ]; then
    echo "Custom certificate is provided"
    echo "$OKTETO_CA_CERT" > /usr/local/share/ca-certificates/okteto_ca_cert.crt
@@ -43,24 +45,22 @@ fi
 variable_params=""
 if [ ! -z "${variables}" ]; then
   for ARG in $(echo "${variables}" | tr ',' '\n'); do
-    variable_params="${variable_params} --var ${ARG}"
+  
+    variable_params="${variable_params} --var \"${ARG}\""
   done
 
   params="${params} ${variable_params}"
 fi
 
-IFS=$'\n'
 github_env_vars=$(env | grep '^GITHUB_')
 github_params=""
 
 for VAR in $github_env_vars; do
-   echo "Processing $VAR"
    VAR_NAME=$(echo $VAR | cut -d= -f1)
    VAR_VALUE=$(echo $VAR | cut -d= -f2 | tr -d ' ')
    github_params="$github_params --var=${VAR_NAME}=\"${VAR_VALUE}\""
 done
 params="$params $github_params"
-unset IFS
 
 if [ -n "$timeout" ]; then
    params="$params --timeout $timeout"
