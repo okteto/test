@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -33,93 +34,91 @@ func getInput() Input {
 		caCert:    os.Getenv("OKTETO_CA_CERT"),
 	}
 }
-
-func (i *Input) nameToParams() string {
+func (i *Input) nameToParams() []string {
 	if i.name != "" {
-		return "--name " + i.name
+		return []string{fmt.Sprintf("--name=%s", i.name)}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) namespaceToParams() string {
+func (i *Input) namespaceToParams() []string {
 	if i.namespace != "" {
-		return "--namespace " + i.namespace
+		return []string{fmt.Sprintf("--namespace=%s", i.namespace)}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) fileToParams() string {
+func (i *Input) fileToParams() []string {
 	if i.file != "" {
-		return "--file " + i.file
+		return []string{fmt.Sprintf("--file=%s", i.file)}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) deployToParams() string {
+func (i *Input) deployToParams() []string {
 	if i.deploy == "true" {
-		return "--deploy "
+		return []string{"--deploy"}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) noCacheToParams() string {
+func (i *Input) noCacheToParams() []string {
 	if i.no_cache == "true" {
-		return "--no-cache "
+		return []string{"--no-cache"}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) variablesToParams() string {
+func (i *Input) variablesToParams() []string {
 	if i.variables == "" {
-		return ""
+		return []string{}
 	}
 	variables := strings.Split(i.variables, ",")
-	params := ""
+	params := []string{}
 	for _, variable := range variables {
-		params += "--variable " + variable + " "
+		params = append(params, fmt.Sprintf("--var=%s", variable))
 	}
-	return strings.Trim(params, " ")
+	return params
 }
 
-func (i *Input) githubEnvVarsToParams() string {
+func (i *Input) githubEnvVarsToParams() []string {
 	envVars := os.Environ()
-	params := ""
+	params := []string{}
 	for _, envVar := range envVars {
 		if strings.HasPrefix(envVar, "GITHUB_") {
-			params += "--variable " + envVar + " "
+			params = append(params, fmt.Sprintf("--var=%s", envVar))
 		}
 	}
-	return strings.Trim(params, " ")
+	return params
 }
 
-func (i *Input) timeoutToParams() string {
+func (i *Input) timeoutToParams() []string {
 	if i.timeout != "" {
-		return "--timeout " + i.timeout
+		return []string{fmt.Sprintf("--timeout=%s", i.timeout)}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) testsToParams() string {
+func (i *Input) testsToParams() []string {
 	if i.tests != "" {
-		return i.tests
+		return []string{i.tests}
 	}
-	return ""
+	return []string{}
 }
 
-func (i *Input) logLevelToParams() string {
+func (i *Input) logLevelToParams() []string {
 	if os.Getenv("RUNNER_DEBUG") == "1" {
-		return "--log-level debug"
+		return []string{"--log-level=debug"}
 	}
 	if i.log_level != "" {
-		return "--log-level " + i.log_level
+		return []string{fmt.Sprintf("--log-level=%s", i.log_level)}
 	}
-	return ""
+	return []string{}
 }
 
 func main() {
 
 	input := getInput()
-	params := ""
 
 	if input.caCert != "" {
 		err := os.WriteFile("/usr/local/share/ca-certificates/okteto_ca_cert.crt", []byte(input.caCert), 0644)
@@ -132,43 +131,19 @@ func main() {
 		}
 	}
 
-	if input.name != "" {
-		params += "--name " + input.name + " "
-	}
-	if input.namespace != "" {
-		params += "--namespace " + input.namespace + " "
-	}
-	if input.file != "" {
-		params += "--file " + input.file + " "
-	}
-	if input.deploy == "true" {
-		params += "--deploy "
-	}
+	execArgs := []string{"test"}
+	execArgs = append(execArgs, input.nameToParams()...)
+	execArgs = append(execArgs, input.namespaceToParams()...)
+	execArgs = append(execArgs, input.fileToParams()...)
+	execArgs = append(execArgs, input.deployToParams()...)
+	execArgs = append(execArgs, input.noCacheToParams()...)
+	execArgs = append(execArgs, input.variablesToParams()...)
+	execArgs = append(execArgs, input.githubEnvVarsToParams()...)
+	execArgs = append(execArgs, input.timeoutToParams()...)
+	execArgs = append(execArgs, input.logLevelToParams()...)
+	execArgs = append(execArgs, input.testsToParams()...)
 
-	if input.no_cache == "true" {
-		params += "--no-cache "
-	}
-
-	if input.variables != "" {
-		params += input.variables + " "
-	}
-
-	if githubEnvVars := input.githubEnvVarsToParams(); githubEnvVars != "" {
-		params += githubEnvVars + " "
-	}
-
-	if input.timeout != "" {
-		params += "--timeout " + input.timeout + " "
-	}
-
-	if input.log_level != "" {
-		params += "--log-level " + input.log_level + " "
-	}
-	if input.tests != "" {
-		params += input.tests + " "
-	}
-
-	cmd := exec.Command("okteto", "test", params)
+	cmd := exec.Command("okteto", execArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = os.Environ()
