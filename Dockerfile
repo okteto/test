@@ -13,6 +13,6 @@ RUN go build -o okteto-action main.go
 FROM okteto/okteto:2.31.0
 
 COPY --from=builder /app/okteto-action .
-RUN chmod +x ./okteto-action
+RUN chmod +x /app/okteto-action
 
-ENTRYPOINT ["/entrypoint.sh"] 
+ENTRYPOINT ["/app/okteto-action"] 
