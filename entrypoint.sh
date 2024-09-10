@@ -12,7 +12,7 @@ timeout=$7
 tests=$8
 log_level=$9
 
-IFS=$'\n'
+IFS=$'\t\n '
 
 if [ -n "$OKTETO_CA_CERT" ]; then
    echo "Custom certificate is provided"
