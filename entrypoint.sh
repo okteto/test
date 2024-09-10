@@ -11,7 +11,7 @@ variables=$6
 timeout=$7
 tests=$8
 log_level=$9
-echo $IFS | cat -e
+echo "$IFS" | cat -vte
 IFS=$'\t\n '
 
 if [ -n "$OKTETO_CA_CERT" ]; then
