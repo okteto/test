@@ -81,7 +81,7 @@ params="$params $log_level"
 params="$params $tests"
 
 
-IFS=$'\t\n\0'
+unset IFS
 
 params=$(echo $params | sed 's/^[ \t]*//')
 echo running: okteto test $params
