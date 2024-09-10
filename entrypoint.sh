@@ -83,6 +83,6 @@ params="$params $tests"
 
 IFS=$'\t\n\0'
 
-echo running: okteto test $log_level "$params"
+echo running: okteto test $params
 # shellcheck disable=SC2086
 okteto test $params
