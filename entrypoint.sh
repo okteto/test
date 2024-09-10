@@ -79,7 +79,7 @@ if [ "${RUNNER_DEBUG}" = "1" ]; then
   log_level="--log-level debug"
 fi
 
-IFS=$'\t\n\0'
+IFS=$'\t\n \0'
 
 echo running: okteto test $log_level "$params"
 # shellcheck disable=SC2086
