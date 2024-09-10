@@ -67,8 +67,6 @@ if [ -n "$timeout" ]; then
    params="$params --timeout $timeout"
 fi
 
-params="$params $tests"
-
 if [ ! -z "$log_level" ]; then
   log_level="--log-level ${log_level}"
 fi
@@ -78,9 +76,13 @@ fi
 if [ "${RUNNER_DEBUG}" = "1" ]; then
   log_level="--log-level debug"
 fi
+params="$params $log_level"
+
+params="$params $tests"
+
 
 IFS=$'\t\n\0'
 
 echo running: okteto test $log_level "$params"
 # shellcheck disable=SC2086
-okteto test $log_level $params
+okteto test $params
