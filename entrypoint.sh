@@ -41,6 +41,8 @@ if [ "$no_cache" = "true" ]; then
       params="$params --no-cache"
 fi
 
+# Set IFS to \n
+IFS=$'\n'
 variable_params=""
 if [ ! -z "${variables}" ]; then
   for ARG in $(echo "${variables}" | tr ',' '\n'); do
