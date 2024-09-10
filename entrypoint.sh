@@ -50,14 +50,14 @@ if [ ! -z "${variables}" ]; then
 fi
 
 IFS=$'\n'
-github_env_vars=$(env | grep '^GITHUB_WORK')
+github_env_vars=$(env | grep '^GITHUB_')
 github_params=""
 
 for VAR in $github_env_vars; do
    echo "Processing $VAR"
    VAR_NAME=$(echo $VAR | cut -d= -f1)
-   VAR_VALUE=$(echo $VAR | cut -d= -f2)
-   github_params="$github_params --var=$VAR_NAME=\"$VAR_VALUE\""
+   VAR_VALUE=$(echo $VAR | cut -d= -f2 | tr -d ' ')
+   github_params="$github_params --var=${VAR_NAME}=\"${VAR_VALUE}\""
 done
 params="$params $github_params"
 unset IFS
