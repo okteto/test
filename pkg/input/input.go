@@ -72,9 +72,7 @@ func parseVariables(variables string) []string {
 func (i *Input) ToParams() []string {
 	var params []string
 
-	for _, testName := range strings.Split(i.Tests, " ") {
-		params = append(params, testName)
-	}
+	params = append(params, strings.Split(i.Tests, " ")...)
 
 	if i.Name != "" {
 		params = append(params, fmt.Sprintf("--name=%s", i.Name))
