@@ -1,10 +1,17 @@
 FROM golang:1.22 AS builder
-WORKDIR /app
-COPY . .
-RUN go mod tidy
-RUN go build -o okteto-cli ./cmd/main.go
 
-FROM scratch
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY cmd pkg ./
+
+RUN go build -o bin/okteto-cli -ldflags="-s -w" ./cmd/main.go
+
+FROM scratch AS final
 WORKDIR /root/
-COPY --from=builder /app/okteto-cli .
+COPY --from=builder /app/bin/okteto-cli .
 CMD ["./okteto-cli"]
