@@ -1,5 +1,10 @@
-FROM okteto/okteto:2.31.0
+FROM golang:1.22 AS builder
+WORKDIR /app
+COPY . .
+RUN go mod tidy
+RUN go build -o okteto-cli ./cmd/main.go
 
-COPY entrypoint.sh /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"] 
+FROM scratch
+WORKDIR /root/
+COPY --from=builder /app/okteto-cli .
+CMD ["./okteto-cli"]
