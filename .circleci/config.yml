@@ -35,8 +35,7 @@ jobs:
           command: go test ./... -v
 
   docker-build-and-cve-scan:
-    docker:
-      - image: docker:20.10
+    executor: go-executor
     steps:
       - setup_remote_docker:
           version: 20.10.7
