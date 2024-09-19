@@ -14,4 +14,4 @@ RUN go build -o bin/okteto-cli -ldflags="-s -w" ./cmd/main.go
 FROM scratch AS final
 WORKDIR /root/
 COPY --from=builder /app/bin/okteto-cli .
-CMD ["./okteto-cli"]
+CMD ["./bin/okteto-cli"]
