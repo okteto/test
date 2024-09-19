@@ -7,7 +7,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY cmd pkg ./
+COPY . .
 
 RUN go build -o bin/okteto-cli -ldflags="-s -w" ./cmd/main.go
 
