@@ -54,7 +54,6 @@ jobs:
           command: trivy image --severity HIGH,CRITICAL okteto-cli:latest
 
 workflows:
-  version: 2
   build-test-and-scan:
     jobs:
       - setup
