@@ -33,7 +33,7 @@ func TestNewInput(t *testing.T) {
 
 func TestToParams(t *testing.T) {
 	// Arrange: Create sample input
-	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2,VAR3=\"this is a test\"", "60s", "test-suite", "info"}
+	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2,VAR3=\"this is a test\"", "60s", "test-suite unit", "info"}
 	envVars := map[string]string{}
 	input, _ := NewInput(args, envVars)
 
@@ -42,6 +42,8 @@ func TestToParams(t *testing.T) {
 
 	// Assert: Validate the params
 	expectedParams := []string{
+		"test-suite",
+		"unit",
 		"--name=my-name",
 		"--namespace=my-namespace",
 		"--file=my-file.yaml",
