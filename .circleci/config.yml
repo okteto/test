@@ -48,7 +48,7 @@ jobs:
           name: Install Trivy
           command: |
             wget https://github.com/aquasecurity/trivy/releases/download/v0.48.3/trivy_0.48.3_Linux-64bit.deb
-            sudo dpkg -i trivy_0.48.3_Linux-64bit.deb
+            dpkg -i trivy_0.48.3_Linux-64bit.deb
       - run:
           name: Scan for Vulnerabilities with Trivy
           command: trivy image --severity HIGH,CRITICAL okteto-cli:latest
