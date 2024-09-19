@@ -14,4 +14,4 @@ RUN go build -o bin/okteto-test -ldflags="-s -w" ./cmd/main.go
 FROM scratch AS final
 WORKDIR /root/
 COPY --from=builder /app/bin/okteto-test /okteto-test
-ENTRYPOINT ["okteto-test"]
+ENTRYPOINT ["/okteto-test"]
