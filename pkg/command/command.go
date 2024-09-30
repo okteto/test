@@ -22,7 +22,7 @@ type CommandRunner interface {
 
 // InfoLogger is an interface for logging information
 type InfoLogger interface {
-	LogInfo(msg string, keysAndValues ...interface{})
+	Info(msg string, keysAndValues ...interface{})
 }
 
 // DefaultRunner is the default implementation of CommandRunner
@@ -42,6 +42,6 @@ func (r *DefaultRunner) Run(cmd *exec.Cmd) error {
 func PrepareAndRunCommand(params []string, runner CommandRunner, l InfoLogger) error {
 	execArgs := append([]string{subcommand}, params...)
 	cmd := exec.Command(oktetoCmd, execArgs...)
-	l.LogInfo(fmt.Sprintf("Executing command: %s %v", oktetoCmd, execArgs))
+	l.Info(fmt.Sprintf("Executing command: %s %v", oktetoCmd, execArgs))
 	return runner.Run(cmd)
 }

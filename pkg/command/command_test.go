@@ -23,7 +23,7 @@ func (m *MockRunner) Run(cmd *exec.Cmd) error {
 type MockLogger struct {
 }
 
-func (m *MockLogger) LogInfo(msg string, keysAndValues ...interface{}) {
+func (m *MockLogger) Info(msg string, keysAndValues ...interface{}) {
 	fmt.Print(msg)
 }
 
