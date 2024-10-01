@@ -45,7 +45,7 @@ jobs:
           command: docker build -t okteto-test-action:latest .
       - run:
           name: Scan for Vulnerabilities with Trivy
-          command: trivy image --severity HIGH,CRITICAL okteto-test-action:latest
+          command: trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --severity HIGH,CRITICAL okteto-test-action:latest
 
 workflows:
   build-test-and-scan:
