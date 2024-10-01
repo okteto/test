@@ -14,9 +14,16 @@ type fakeCommandRunner struct {
 	err error
 }
 
+// Run does nothing
 func (fcr *fakeCommandRunner) Run(_ *exec.Cmd) error {
 	return fcr.err
 }
+
+// fakeInfoLogger is a mock implementation of the InfoLogger interface
+type fakeInfoLogger struct{}
+
+// Info does nothing
+func (fil *fakeInfoLogger) Info(_ string, _ ...interface{}) {}
 
 func TestHandleCaCert(t *testing.T) {
 	tests := []struct {
@@ -81,7 +88,7 @@ func TestHandleCaCert(t *testing.T) {
 			fs := tt.setupFs()
 			runner := tt.setupRunner()
 
-			err := HandleCaCert(tt.caCert, runner, fs)
+			err := HandleCaCert(tt.caCert, runner, fs, &fakeInfoLogger{})
 
 			assert.ErrorIs(t, err, tt.expectError)
 		})

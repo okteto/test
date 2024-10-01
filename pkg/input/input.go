@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+const (
+	// oktetoCaCertEnvVar is the environment variable that contains the CA certificate
+	oktetoCaCertEnvVar = "OKTETO_CA_CERT"
+)
+
 var (
 	// ErrInvalidInput is returned when the input is invalid
 	ErrInvalidInput = errors.New("invalid input")
@@ -43,7 +48,7 @@ func NewInput(args []string, envVars map[string]string) (*Input, error) {
 		Timeout:   args[6],
 		Tests:     args[7],
 		LogLevel:  args[8],
-		CaCert:    envVars["OKTETO_CA_CERT"],
+		CaCert:    envVars[oktetoCaCertEnvVar],
 	}
 	input.Variables = append(input.Variables, getGithubEnvVars(envVars)...)
 	return input, nil

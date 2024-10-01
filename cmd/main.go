@@ -34,7 +34,7 @@ func main() {
 
 	runner := &command.DefaultRunner{}
 	log.Debug("Using default command runner")
-	if err := cert.HandleCaCert(userInput.CaCert, runner, fs); err != nil {
+	if err := cert.HandleCaCert(userInput.CaCert, runner, fs, log); err != nil {
 		log.Error("Error handling CA certificate: %v", slog.String("error", err.Error()))
 		os.Exit(2) // Return error code for certificate handling failure
 	}
