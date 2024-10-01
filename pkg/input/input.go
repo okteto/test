@@ -45,6 +45,7 @@ func NewInput(args []string, envVars map[string]string) (*Input, error) {
 		LogLevel:  args[8],
 		CaCert:    envVars["OKTETO_CA_CERT"],
 	}
+	input.Variables = append(input.Variables, getGithubEnvVars(envVars)...)
 	return input, nil
 }
 

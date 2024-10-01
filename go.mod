@@ -1,6 +1,6 @@
 module github.com/okteto/test
 
-go 1.22.2
+go 1.22.7
 
 require github.com/spf13/afero v1.11.0
 
@@ -13,5 +13,5 @@ require (
 
 require (
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 )

@@ -65,6 +65,9 @@ func getEnvVars(environList []string) map[string]string {
 }
 
 func parseLogLevel(level string) slog.Level {
+	if os.Getenv("RUNNER_DEBUG") == "true" {
+		return slog.LevelDebug
+	}
 	switch level {
 	case "debug":
 		return slog.LevelDebug
