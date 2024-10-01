@@ -1,6 +1,6 @@
 # Variables
 BINFOLDER=bin
-BINNAME=okteto-test
+BINNAME=okteto-test-action
 
 .PHONY: all build test cves clean
 

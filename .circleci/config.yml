@@ -20,7 +20,7 @@ jobs:
       - checkout
       - run:
           name: Build the project
-          command: go build -o bin/okteto-cli -ldflags="-s -w" ./cmd/main.go
+          command: go build -o bin/okteto-test-action -ldflags="-s -w" ./cmd/main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -45,7 +45,7 @@ jobs:
           command: docker build -t okteto-test-action:latest .
       - run:
           name: Scan for Vulnerabilities with Trivy
-          command: trivy image --severity HIGH,CRITICAL okteto-cli:latest
+          command: trivy image --severity HIGH,CRITICAL okteto-test-action:latest
 
 workflows:
   build-test-and-scan:
