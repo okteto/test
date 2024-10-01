@@ -7,7 +7,7 @@ BINNAME=okteto-test
 all: build test cves
 
 build:
-	go build -o $(BINFOLDER)/$(BINNAME) ./cmd/main.go
+	go build -o bin/okteto-test -ldflags="-s -w" ./cmd/main.go
 
 test:
 	go test ./... -v
