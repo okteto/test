@@ -1,0 +1,27 @@
+# Binaries and build artifacts
+bin/
+
+# Dependency directories (if Go modules are downloaded during the Docker build)
+trivy/
+trivy-cache/
+
+# Test files
+*_test.go
+
+# Documentation and non-essential files
+README.md
+LICENSE
+code-of-conduct.md
+
+# Dockerfile (optional, as it's already outside the context in most cases)
+Dockerfile
+
+# Build-related files
+Makefile
+
+# Git files (optional if using version control)
+.git/
+.gitignore
+
+# Okteto action file (if not needed inside the container)
+action.yml

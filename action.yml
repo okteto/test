@@ -1,33 +1,42 @@
 name: 'Okteto Test'
-description: 'Run tests in okteto'
+description: 'Run tests in Okteto manifest'
 inputs:
   name:
     description: "The name of the dev environment"
     required: false
+    default: ""
   namespace:
-    description: "If present, the namespace scope for this action. If not specified, it will use the current context"
+    description: "The namespace scope for this action. Defaults to the current context if not specified."
     required: false
+    default: ""
   file:
-    description: "path to the okteto manifest file, if not specified the default path will be used"
+    description: "Path to the Okteto manifest file. Defaults to the default path if not specified."
     required: false
+    default: ""
   deploy:
-    description: 'Deploy the dev environment always even if it has already been deployed'
+    description: 'Deploy the dev environment even if it has already been deployed'
     required: false
+    default: 'false' 
   no-cache:
-    description: 'Do not use the cache for runnings the tests'
+    description: 'Do not use the cache when running the tests'
     required: false
+    default: 'false'
   variables:
-    description: "Variables to be used by the dev environment. If several variables are present, they should be separated by commas e.g. VAR1=VAL1,VAR2=VAL2,VAR3=VAL3"
+    description: "Variables to be used by the dev environment. If multiple variables are present, separate them with commas (e.g., VAR1=VAL1,VAR2=VAL2)"
     required: false
+    default: ""
   timeout:
-    description: "The length of time to wait for completion, zero means never. Any other values should contain a corresponding time unit e.g. 1s, 2m, 3h  (default 5m0s)"
+    description: "The length of time to wait for completion (e.g., 1s, 2m, 3h)"
     required: false
+    default: "5m"
   tests:
-    description: "The test sections to run separated by spaces. If not tests are defined, all tests are ran. Eg: 'unit integration' "
+    description: "The test sections to run, separated by spaces. Runs all tests if no tests are defined (e.g., 'unit integration')."
     required: false
+    default: ""
   log-level:
-    description: "Log level string. Valid options are debug, info, warn, error"
+    description: "Log level for the action. Valid options: debug, info, warn, error."
     required: false
+    default: "" 
 runs:
   using: 'docker'
   image: 'Dockerfile'

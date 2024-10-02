@@ -1,0 +1,62 @@
+version: 2.1
+
+executors:
+  go-executor:
+    docker:
+      - image: okteto/golang-ci:2.6.5
+
+jobs:
+  setup:
+    executor: go-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Go Modules
+          command: go mod download
+
+  build:
+    executor: go-executor
+    steps:
+      - checkout
+      - run:
+          name: Build the project
+          command: go build -o bin/okteto-test-action -ldflags="-s -w" ./cmd/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - bin
+
+  test:
+    executor: go-executor
+    steps:
+      - checkout
+      - run:
+          name: Run Unit Tests
+          command: go test ./... -v
+
+  docker-build-and-cve-scan:
+    executor: go-executor
+    steps:
+      - setup_remote_docker:
+          version: default
+      - checkout
+      - run:
+          name: Build Docker Image
+          command: docker build -t okteto-test-action:latest .
+      - run:
+          name: Scan for Vulnerabilities with Trivy
+          command: trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --severity HIGH,CRITICAL okteto-test-action:latest
+
+workflows:
+  build-test-and-scan:
+    jobs:
+      - setup
+      - build:
+          requires:
+            - setup
+      - test:
+          requires:
+            - build
+      - docker-build-and-cve-scan:
+          requires:
+            - build
