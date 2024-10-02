@@ -70,7 +70,7 @@ func loadBoolOrDefault(value string, defaultValue bool) bool {
 	if _, ok := trueValues[strings.ToLower(value)]; ok {
 		return true
 	}
-	return defaultValue
+	return false
 }
 
 func parseVariables(variables string) []string {
