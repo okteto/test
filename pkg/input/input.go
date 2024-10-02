@@ -17,6 +17,15 @@ var (
 
 	// ErrInsufficientArguments is returned when the input arguments are insufficient
 	ErrInsufficientArguments = errors.New("insufficient arguments")
+
+	// trueValues is a map of the possible values that represent true
+	trueValues = map[string]interface{}{
+		"true": nil,
+		"t":    nil,
+		"1":    nil,
+		"yes":  nil,
+		"y":    nil,
+	}
 )
 
 type Input struct {
@@ -58,14 +67,10 @@ func loadBoolOrDefault(value string, defaultValue bool) bool {
 	if value == "" {
 		return defaultValue
 	}
-	trueValues := map[string]bool{
-		"true": true,
-		"t":    true,
-		"1":    true,
-		"yes":  true,
-		"y":    true,
+	if _, ok := trueValues[strings.ToLower(value)]; ok {
+		return true
 	}
-	return trueValues[strings.ToLower(value)]
+	return defaultValue
 }
 
 func parseVariables(variables string) []string {
