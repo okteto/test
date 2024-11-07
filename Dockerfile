@@ -11,7 +11,7 @@ COPY . .
 
 RUN go build -o bin/okteto-test -ldflags="-s -w" ./cmd/main.go
 
-FROM okteto/okteto:master AS final
+FROM okteto/okteto:3.1.0 AS final
 WORKDIR /root/
 COPY --from=builder /app/bin/okteto-test /okteto-test
 ENTRYPOINT ["/okteto-test"]
