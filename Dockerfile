@@ -1,4 +1,4 @@
-FROM golang:1.22 AS builder
+FROM golang:1.23.6-bookworm AS builder
 
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o bin/okteto-test -ldflags="-s -w" ./cmd/main.go
+RUN go build -o bin/okteto-test -ldflags="-s -w" -trimpath ./cmd/main.go
 
 FROM okteto/okteto:master AS final
 WORKDIR /root/
