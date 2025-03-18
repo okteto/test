@@ -1,27 +1,34 @@
-# Binaries and build artifacts
-bin/
+# Ignore Dockerfile itself  
+Dockerfile  
 
-# Dependency directories (if Go modules are downloaded during the Docker build)
-trivy/
-trivy-cache/
+# Ignore documentation and metadata  
+LICENSE  
+README.md  
+code-of-conduct.md  
+action.yml  
+Makefile  
 
-# Test files
-*_test.go
+# Ignore test files  
+**/*_test.go  
 
-# Documentation and non-essential files
-README.md
-LICENSE
-code-of-conduct.md
+# Ignore Go build artifacts and binaries  
+*.exe  
+*.out  
+*.test  
+*.log  
+*.prof  
+bin/  
 
-# Dockerfile (optional, as it's already outside the context in most cases)
-Dockerfile
+# Ignore dependency and cache directories  
+vendor/  
+tmp/  
+cache/  
+trivy/  
+trivy-cache/  
 
-# Build-related files
-Makefile
+# Ignore Git-related files  
+.git/  
+.gitignore  
 
-# Git files (optional if using version control)
-.git/
-.gitignore
-
-# Okteto action file (if not needed inside the container)
-action.yml
+# Ignore system-generated files  
+.DS_Store  
