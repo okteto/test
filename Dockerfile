@@ -1,4 +1,4 @@
-FROM golang:1.23.6-bookworm AS builder
+FROM golang:1.24.7-bookworm AS builder
 
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
