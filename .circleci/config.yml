@@ -3,7 +3,7 @@ version: 2.1
 executors:
   go-executor:
     docker:
-      - image: okteto/golang-ci:2.6.5
+      - image: okteto/golang-ci:2.8.2
 
 jobs:
   setup:
