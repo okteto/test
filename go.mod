@@ -1,6 +1,6 @@
 module github.com/okteto/test
 
-go 1.24.7
+go 1.25
 
 require github.com/spf13/afero v1.11.0
 
