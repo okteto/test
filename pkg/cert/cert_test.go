@@ -26,11 +26,15 @@ type fakeInfoLogger struct{}
 func (fil *fakeInfoLogger) Info(_ string, _ ...interface{}) {}
 
 func TestHandleCaCert(t *testing.T) {
+	notFound := func(string) (string, error) { return "", errors.New("not found") }
+	found := func(string) (string, error) { return "/usr/bin/update-ca-certificates", nil }
+
 	tests := []struct {
 		name        string
 		caCert      string
 		setupFs     func() afero.Fs
 		setupRunner func() *fakeCommandRunner
+		lookPath    LookPathFunc
 		expectError error
 	}{
 		{
@@ -42,6 +46,7 @@ func TestHandleCaCert(t *testing.T) {
 			setupRunner: func() *fakeCommandRunner {
 				return &fakeCommandRunner{}
 			},
+			lookPath:    notFound,
 			expectError: nil,
 		},
 		{
@@ -54,6 +59,7 @@ func TestHandleCaCert(t *testing.T) {
 			setupRunner: func() *fakeCommandRunner {
 				return &fakeCommandRunner{}
 			},
+			lookPath:    notFound,
 			expectError: ErrWriteFailed,
 		},
 		{
@@ -67,6 +73,7 @@ func TestHandleCaCert(t *testing.T) {
 				runner.err = errors.New("update failed")
 				return runner
 			},
+			lookPath:    found,
 			expectError: ErrUpdateFailed,
 		},
 		{
@@ -76,9 +83,9 @@ func TestHandleCaCert(t *testing.T) {
 				return afero.NewMemMapFs()
 			},
 			setupRunner: func() *fakeCommandRunner {
-				runner := &fakeCommandRunner{}
-				return runner
+				return &fakeCommandRunner{}
 			},
+			lookPath:    notFound,
 			expectError: nil,
 		},
 	}
@@ -88,7 +95,7 @@ func TestHandleCaCert(t *testing.T) {
 			fs := tt.setupFs()
 			runner := tt.setupRunner()
 
-			err := HandleCaCert(tt.caCert, runner, fs, &fakeInfoLogger{})
+			err := HandleCaCert(tt.caCert, runner, tt.lookPath, fs, &fakeInfoLogger{})
 
 			assert.ErrorIs(t, err, tt.expectError)
 		})
