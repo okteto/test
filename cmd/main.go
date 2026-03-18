@@ -19,7 +19,7 @@ func main() {
 
 	userInput, err := input.NewInput(args, envVars)
 	if err != nil {
-		logger := slog.New(&slog.TextHandler{})
+		logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 		logger.Error("Error parsing input", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
