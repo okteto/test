@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/okteto/test/pkg/cert"
@@ -19,7 +20,7 @@ func main() {
 
 	userInput, err := input.NewInput(args, envVars)
 	if err != nil {
-		logger := slog.New(&slog.TextHandler{})
+		logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 		logger.Error("Error parsing input", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
@@ -34,7 +35,7 @@ func main() {
 
 	runner := &command.DefaultRunner{}
 	log.Debug("Using default command runner")
-	if err := cert.HandleCaCert(userInput.CaCert, runner, fs, log); err != nil {
+	if err := cert.HandleCaCert(userInput.CaCert, runner, exec.LookPath, fs, log); err != nil {
 		log.Error("Error handling CA certificate: %v", slog.String("error", err.Error()))
 		os.Exit(2) // Return error code for certificate handling failure
 	}
