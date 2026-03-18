@@ -70,6 +70,19 @@ func TestHandleCaCert(t *testing.T) {
 			expectError: ErrUpdateFailed,
 		},
 		{
+			name:   "update-ca-certificates not found",
+			caCert: "dummy-cert",
+			setupFs: func() afero.Fs {
+				return afero.NewMemMapFs()
+			},
+			setupRunner: func() *fakeCommandRunner {
+				return &fakeCommandRunner{
+					err: &exec.Error{Name: "update-ca-certificates", Err: exec.ErrNotFound},
+				}
+			},
+			expectError: nil,
+		},
+		{
 			name:   "successful case",
 			caCert: "dummy-cert",
 			setupFs: func() afero.Fs {

@@ -2,6 +2,7 @@
 package cert
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 
@@ -11,7 +12,7 @@ import (
 
 const (
 	// oktetocaCertPath is the path to the CA certificate
-	oktetocaCertPath = "/usr/local/share/ca-certificates/okteto_ca_cert.crt"
+	oktetocaCertPath = "/etc/ssl/certs/okteto_ca_cert.pem"
 
 	// updateCaCertificatesCmd is the command to update the CA certificates
 	updateCaCertificatesCmd = "update-ca-certificates"
@@ -45,6 +46,11 @@ func HandleCaCert(caCert string, runner command.CommandRunner, fs afero.Fs, l In
 
 	cmd := exec.Command(updateCaCertificatesCmd)
 	if err := runner.Run(cmd); err != nil {
+		var execErr *exec.Error
+		if errors.As(err, &execErr) && errors.Is(execErr.Err, exec.ErrNotFound) {
+			l.Info("update-ca-certificates not found, skipping")
+			return nil
+		}
 		return fmt.Errorf("%w: %w", ErrUpdateFailed, err)
 	}
 	l.Info("CA certificates updated successfully")
