@@ -1,4 +1,6 @@
-FROM ghcr.io/okteto/golang:1.25 AS builder
+# ghcr.io/okteto/golang has no Go 1.26.10 build yet. Switch back to ghcr.io/okteto/golang:1.26
+# once `docker run --rm ghcr.io/okteto/golang:1.26 go version` prints go1.26.10 or later.
+FROM golang:1.26.10 AS builder
 
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
