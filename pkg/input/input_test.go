@@ -9,7 +9,7 @@ import (
 
 func TestNewInput(t *testing.T) {
 	// Arrange: Create sample arguments and environment variables
-	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2", "60s", "test-suite", "info"}
+	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2", "60s", "test-suite", "info", "pre-commit,release"}
 	envVars := map[string]string{
 		"OKTETO_CA_CERT": "my-ca-cert",
 	}
@@ -28,12 +28,13 @@ func TestNewInput(t *testing.T) {
 	assert.Equal(t, "60s", input.Timeout)
 	assert.Equal(t, "test-suite", input.Tests)
 	assert.Equal(t, "info", input.LogLevel)
+	assert.Equal(t, []string{"pre-commit", "release"}, input.Profiles)
 	assert.Equal(t, "my-ca-cert", input.CaCert)
 }
 
 func TestToParams(t *testing.T) {
 	// Arrange: Create sample input
-	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2,VAR3=\"this is a test\"", "60s", "test-suite unit", "info"}
+	args := []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "VAR1=value1,VAR2=value2,VAR3=\"this is a test\"", "60s", "test-suite unit", "info", ""}
 	envVars := map[string]string{}
 	input, _ := NewInput(args, envVars)
 
@@ -57,12 +58,60 @@ func TestToParams(t *testing.T) {
 	assert.ElementsMatch(t, expectedParams, params)
 }
 
-func TestNewInput_WithMissingArguments(t *testing.T) {
-	args := []string{"my-name"}
-	envVars := map[string]string{}
+func TestToParams_WithProfiles(t *testing.T) {
+	// Arrange: Create sample input without tests, as they cannot be combined with profiles
+	args := []string{"", "", "", "false", "false", "", "5m", "", "", "pre-commit, release"}
+	input, _ := NewInput(args, map[string]string{})
 
-	_, err := NewInput(args, envVars)
-	assert.Error(t, err)
+	// Act: Get the command parameters
+	params := input.ToParams()
+
+	// Assert: Each profile is passed as a --profile flag. The empty tests input is passed
+	// as an empty argument, which okteto test ignores
+	expectedParams := []string{
+		"",
+		"--profile=pre-commit",
+		"--profile=release",
+		"--timeout=5m",
+	}
+	assert.ElementsMatch(t, expectedParams, params)
+}
+
+func TestNewInput_WithMissingArguments(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+	}{
+		{"OneArgument", []string{"my-name"}},
+		{"NoProfiles", []string{"my-name", "my-namespace", "my-file.yaml", "true", "false", "", "60s", "", "info"}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := NewInput(tt.args, map[string]string{})
+			assert.ErrorIs(t, err, ErrInsufficientArguments)
+		})
+	}
+}
+
+func TestParseProfiles(t *testing.T) {
+	tests := []struct {
+		name     string
+		profiles string
+		expected []string
+	}{
+		{"Empty", "", []string{}},
+		{"OneProfile", "pre-commit", []string{"pre-commit"}},
+		{"SeveralProfiles", "pre-commit,release", []string{"pre-commit", "release"}},
+		{"SpacesAreTrimmed", " pre-commit , release ", []string{"pre-commit", "release"}},
+		{"EmptyProfilesAreIgnored", "pre-commit,, ,release,", []string{"pre-commit", "release"}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, parseProfiles(tt.profiles))
+		})
+	}
 }
 func TestLoadBoolOrDefault(t *testing.T) {
 	tests := []struct {

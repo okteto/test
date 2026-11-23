@@ -43,7 +43,18 @@ The length of time to wait for completion. Values should contain a corresponding
 
 ### `tests`
 
-The test sections to run, separated by spaces. If no tests are specified all tests are run.
+The test sections to run, separated by spaces. If no tests are specified, it runs the tests without profiles, plus the ones of the profiles set in `profiles`.
+
+### `profiles`
+
+The profiles of the tests to run, separated by commas e.g. `pre-commit,release`. The tests without profiles run too, as in Docker Compose. It can't be combined with `tests`. If the `OKTETO_PROFILES` environment variable is set, it takes precedence over this input.
+
+```yaml
+    - name: "Run tests"
+      uses: okteto/test@latest
+      with:
+        profiles: "release"
+```
 
 ### `log-level`
 
