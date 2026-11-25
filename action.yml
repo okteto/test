@@ -30,7 +30,11 @@ inputs:
     required: false
     default: "5m"
   tests:
-    description: "The test sections to run, separated by spaces. Runs all tests if no tests are defined (e.g., 'unit integration')."
+    description: "The test sections to run, separated by spaces (e.g., 'unit integration'). If no tests are defined, it runs the tests without profiles, plus the ones of the profiles defined in 'profiles'."
+    required: false
+    default: ""
+  profiles:
+    description: "The profiles of the tests to run, along with the tests without profiles. If multiple profiles are present, separate them with commas (e.g., pre-commit,release). It cannot be combined with 'tests'."
     required: false
     default: ""
   log-level:
@@ -50,6 +54,7 @@ runs:
     - ${{ inputs.timeout }}
     - ${{ inputs.tests }}
     - ${{ inputs.log-level }}
+    - ${{ inputs.profiles }}
 
 branding:
   color: 'green'

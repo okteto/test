@@ -38,12 +38,13 @@ type Input struct {
 	Timeout   string
 	Tests     string
 	LogLevel  string
+	Profiles  []string
 	CaCert    string
 }
 
 // NewInput parses the arguments and environment variables into an Input struct
 func NewInput(args []string, envVars map[string]string) (*Input, error) {
-	if len(args) < 9 {
+	if len(args) < 10 {
 		return nil, fmt.Errorf("%w: %w", ErrInvalidInput, ErrInsufficientArguments)
 	}
 
@@ -57,6 +58,7 @@ func NewInput(args []string, envVars map[string]string) (*Input, error) {
 		Timeout:   args[6],
 		Tests:     args[7],
 		LogLevel:  args[8],
+		Profiles:  parseProfiles(args[9]),
 		CaCert:    envVars[oktetoCaCertEnvVar],
 	}
 	input.Variables = append(input.Variables, getGithubEnvVars(envVars)...)
@@ -78,6 +80,17 @@ func parseVariables(variables string) []string {
 		return []string{}
 	}
 	return strings.Split(variables, ",")
+}
+
+// parseProfiles splits the comma-separated profiles, trimming the spaces around them and ignoring the empty ones
+func parseProfiles(profiles string) []string {
+	result := []string{}
+	for _, profile := range strings.Split(profiles, ",") {
+		if profile = strings.TrimSpace(profile); profile != "" {
+			result = append(result, profile)
+		}
+	}
+	return result
 }
 
 func (i *Input) ToParams() []string {
@@ -102,6 +115,9 @@ func (i *Input) ToParams() []string {
 	}
 	for _, variable := range i.Variables {
 		params = append(params, fmt.Sprintf("--var=%s", variable))
+	}
+	for _, profile := range i.Profiles {
+		params = append(params, fmt.Sprintf("--profile=%s", profile))
 	}
 	if i.Timeout != "" {
 		params = append(params, fmt.Sprintf("--timeout=%s", i.Timeout))
